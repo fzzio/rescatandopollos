@@ -1,20 +1,19 @@
-class Jugador
-{
-  int puntos;
+/* Clase Jugador para manejar todos los eventos que tengan que
+  ver con un jugador. */
+class Jugador{
+  private int puntos;
   
-  Jugador()
-  {
-    puntos = 0;
-    
+  Jugador(){
+    setPuntos(0);
   }
   
-  public int getPuntos()
-  {
+  // Getters
+  public int getPuntos(){
     return (this.puntos);
   }
   
-  public void setPuntos(int puntos)
-  {
+  // Setters
+  public void setPuntos(int puntos){
     this.puntos = puntos;
   }
 }
