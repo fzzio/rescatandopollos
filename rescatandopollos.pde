@@ -116,21 +116,21 @@ void draw()
 
 void keyPressed(){
   if(!estaCalibrado && mouseX < video.width && mouseY < video.height){
-    if(key == '+'){
+    if(key == '1'){
       int loc = mouseX + mouseY*video.width;
       trackColorA = video.pixels[loc];
       aTrackR = red(trackColorA);
       aTrackG = green(trackColorA);
       aTrackB = blue(trackColorA);
       mensaje = "Calibrando color para Jugador A: [" + aTrackR + ", " + aTrackG + ", " + aTrackB + "].";
-    }else if(key == '-'){
+    }else if(key == '2'){
       int loc = mouseX + mouseY*video.width;
       trackColorB = video.pixels[loc];
       bTrackR = red(trackColorB);
       bTrackG = green(trackColorB);
       bTrackB = blue(trackColorB);
       mensaje = "Calibrando color para Jugador B: [" + bTrackR + ", " + bTrackG + ", " + bTrackB + "].";
-    }else if(key == '/'){
+    }else if(key == '3'){
       estaCalibrado = true;
     }
   }
@@ -172,7 +172,7 @@ void asignarPosicionesDetectadas(){
     }
   }
   
-  if (worldRecord1 < 10) {
+  if (worldRecord1>0) {
     int posActualNA = nidoA.getPosX();
     if((posActualNA - closestX1) > 0){
       // mover a la derecha
@@ -190,26 +190,34 @@ void asignarPosicionesDetectadas(){
       }
     }
     nidoA.setPosX(posActualNA);
+    nidoA.dibujarNido();
+
   }
   
-  if (worldRecord2 < 10) {
+  if (worldRecord2 > 0) {
     int posActualNB = nidoB.getPosX();
+    
+    println("Entra a Nido B");
     if((posActualNB - closestX2) > 0){
       // mover a la derecha
+      println("Mover derecha");
       if(posActualNB < nidoB.getLimiteMaxX()){
-        posActualNB +=2;
+        posActualNB += 5;
       }else{
         posActualNB = nidoB.getLimiteMaxX();
       }
     }else if((posActualNB - closestX2) < 0){
-      // mover a la izquierda      
+      // mover a la izquierda
+      println("Mover izquierda");      
       if(posActualNB > nidoB.getLimiteMinX()){
-        posActualNB +=2;
+        posActualNB =posActualNB - 5;
       }else{
         posActualNB = nidoB.getLimiteMinX();
       }
     }
     nidoB.setPosX(posActualNB);
+    
+    
   }
 }
 

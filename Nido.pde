@@ -72,4 +72,5 @@ class Nido{
       image(getImgNido(), getPosX(), getPosY());
     popMatrix();
   }
+  
 }
