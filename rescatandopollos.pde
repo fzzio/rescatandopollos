@@ -8,7 +8,7 @@ import codeanticode.gsvideo.*;
 PImage imgFondo;
 
 Jugador jugadorA, jugadorB;
-Pollo[]   pollosA, pollosB;
+ArrayList pollosA, pollosB;
 int totalPollos = 30;
 int velocidad = 2;
 int atrapadosPollosA = 0, atrapadosPollosB = 0;
@@ -42,11 +42,11 @@ void setup()
   imgFondo = loadImage("img/fondo.png");
   jugadorA = new Jugador();
   jugadorB = new Jugador();
-  pollosA = new Pollo[totalPollos];
-  pollosB = new Pollo[totalPollos];
+  pollosA = new ArrayList(totalPollos);
+  pollosB = new ArrayList(totalPollos);
     for(int i=0; i< totalPollos; i++){
-      pollosA[i] = new Pollo(loadImage("img/polloA.png"), 0, 418);
-      pollosB[i] = new Pollo(loadImage("img/polloB.png"), 515, 930);
+      pollosA.add(new Pollo(loadImage("img/polloA.png"), 0, 418, 610));
+      pollosB.add(new Pollo(loadImage("img/polloB.png"), 515, 930, 610));
     }
   nidoA = new Nido(loadImage("img/nidoA.png"), 0, 300);
   nidoB = new Nido(loadImage("img/nidoB.png"), 515, 810);
@@ -95,12 +95,19 @@ void draw()
       text("Jugador A: " + jugadorA.getPuntos() + " puntos.", width/2, height/2 + 40);
       text("Jugador B: " + jugadorB.getPuntos() + " puntos.", width/2, height/2 + 70);
     } 
-    else {
-      int j = (int) random(0, totalPollos);
-      int k = (int) random(0, totalPollos);
-      pollosA[j].setPosY(pollosA[j].getPosY() + velocidad);
-      pollosA[j].dibujarPollo();
-      pollosB[k].dibujarPollo();
+    else{
+      
+      for(int i=0; i<totalPollos; i++){
+          ((Pollo)pollosA.get(i)).dibujarPollo();
+          ((Pollo)pollosA.get(i)).caer();
+          
+          
+          // si fue atrapado por un nido
+          if(((Pollo)pollosA.get(i)).getPosY() <= 0){
+            pollosA.remove(i);
+          }
+      }
+
 
       asignarPosicionesDetectadas();
       //Dibujamos Nidos segun posiciones detectadas
