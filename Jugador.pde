@@ -16,4 +16,12 @@ class Jugador{
   public void setPuntos(int puntos){
     this.puntos = puntos;
   }
+  
+  public void aumentarPuntos(){
+    this.puntos = this.puntos + 1;
+  }
+  
+  public void reducirPuntos(){
+    this.puntos = this.puntos - 1;
+  }
 }

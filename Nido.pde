@@ -67,10 +67,9 @@ class Nido{
     popMatrix();
   }
   
-    public void dibujarNido(){
+  public void dibujarNido(){
     pushMatrix();
       image(getImgNido(), getPosX(), getPosY());
     popMatrix();
-  }
-  
+  }  
 }

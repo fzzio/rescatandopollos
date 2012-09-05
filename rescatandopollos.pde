@@ -98,13 +98,35 @@ void draw()
     else{
       
       for(int i=0; i<totalPollos; i++){
+        
+          // Jugador A
           ((Pollo)pollosA.get(i)).dibujarPollo();
           ((Pollo)pollosA.get(i)).caer();
           
+          // si fue atrapado por un nido
+          if(((Pollo)pollosA.get(i)).getPosY() <= ((Pollo)pollosA.get(i)).getLimiteMaxY()){
+            
+            if (polloAtrapado((Pollo)pollosA.get(i), nidoA)){
+             jugadorA.aumentarPuntos(); 
+            }else{
+             jugadorA.reducirPuntos();
+            }
+            pollosA.remove(i);
+          }
+          
+          // Jugador B
+          ((Pollo)pollosB.get(i)).dibujarPollo();
+          ((Pollo)pollosB.get(i)).caer();
           
           // si fue atrapado por un nido
-          if(((Pollo)pollosA.get(i)).getPosY() <= 0){
-            pollosA.remove(i);
+          if(((Pollo)pollosB.get(i)).getPosY() <= ((Pollo)pollosB.get(i)).getLimiteMaxY()){
+            
+            if (polloAtrapado((Pollo)pollosB.get(i), nidoB)){
+             jugadorB.aumentarPuntos(); 
+            }else{
+             jugadorB.reducirPuntos();
+            }
+            pollosB.remove(i);
           }
       }
 
@@ -278,4 +300,22 @@ void dibujarColoresDetectados(){
     ellipse(closestX2,closestY2,20,20);
     posXInicialB = closestX2;
   }
+}
+
+boolean polloAtrapado(Pollo pollo, Nido nido){
+  int polloPosMinX, polloPosMaxX;
+  int nidoPosMinX, nidoPosMaxX;
+  
+  polloPosMinX = pollo.getPosX();
+  polloPosMaxX = pollo.getPosX() + pollo.getImgPollo().width;
+
+  nidoPosMinX = nido.getPosX();
+  nidoPosMaxX = nido.getPosX() + nido.getImgNido().width;
+  
+  if((polloPosMaxX >= nidoPosMinX) || (polloPosMinX <= nidoPosMaxX)){
+    return true;
+  }else{
+    return false;
+  }
+  
 }
