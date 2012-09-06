@@ -1,21 +1,15 @@
-// Learning Processing
-// Daniel Shiffman
-// http://www.learningprocessing.com
-
-// Example 10-5: Object-oriented timer
-
 class Timer {
  
-  int savedTime; // When Timer started
-  int totalTime; // How long Timer should last
+  int savedTime; // Cuando empezo el Timer
+  int totalTime; // Cuanto deberia durar el Timer
   
   Timer(int tempTotalTime) {
     totalTime = tempTotalTime;
   }
   
-  // Starting the timer
+  // Inicia el timer
   void start() {
-    // When the timer starts it stores the current time in milliseconds.
+    // Cuando inicia el timer se almacenan los milisegundos
     savedTime = millis(); 
   }
   
@@ -29,5 +23,22 @@ class Timer {
     } else {
       return false;
     }
+  }
+  
+  int getTiempoTranscurrido(){
+    return (millis()- savedTime);
+  }
+  
+  int getSegundosTranscurridos(){
+    return ((millis()- savedTime) / 1000);
+  }
+  
+  int getTiempoRestante(){
+    int passedTime = millis()- savedTime;
+    return (totalTime - passedTime);
+  }
+  
+  int getSegundosRestantes(){
+    return (getTiempoRestante() / 1000);
   }
 }

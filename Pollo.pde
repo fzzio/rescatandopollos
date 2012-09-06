@@ -6,6 +6,7 @@ class Pollo{
   private int posX;
   private int posY;
   private float velocidad;
+  private boolean cayendo;
   
   Pollo(){
     // constructor vacio
@@ -17,7 +18,8 @@ class Pollo{
     setLimiteMinX(limiteMinX);
     setLimiteMaxX(limiteMaxX);
     setLimiteMaxY(limiteMaxY);
-    setVelocidad(2);
+    setVelocidad(0);
+    cayendo = false;
     setPosX((int)random(limiteMinX, limiteMaxX));
     setPosY(0);
   }
@@ -51,6 +53,10 @@ class Pollo{
     return (this.velocidad);
   }
   
+  public boolean estaCayendo(){
+    return (this.cayendo);
+  }
+  
   // Setters
   public void setImgPollo(PImage imgPollo){
     this.imgPollo = imgPollo;
@@ -80,6 +86,14 @@ class Pollo{
     this.velocidad = velocidad;
   }
   
+  public void iniciarCaida(){
+    this.cayendo = true;
+  }
+  
+  public void detenerCaida(){
+    this.cayendo = true;
+  }
+  
   // Medodos adicionales
   public void dibujarPollo(){
     pushMatrix();
@@ -87,11 +101,19 @@ class Pollo{
     popMatrix();
   }
   
+  public boolean llegoAlPiso(){
+    if (getPosY() >= getLimiteMaxY()){
+      return true;
+    }else{
+      return false;
+    }
+  }
+  
   public void caer(){
-    float y = getPosY();
-    y = y + velocidad;
-    if(y > getLimiteMaxY()){
-      setPosY(0);
+    int y = getPosY();
+    y = y + (int)velocidad;
+    if(y < height){
+      setPosY(y);
     }
   }
 }

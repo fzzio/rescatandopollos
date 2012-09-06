@@ -45,8 +45,8 @@ void setup()
   pollosA = new ArrayList(totalPollos);
   pollosB = new ArrayList(totalPollos);
     for(int i=0; i< totalPollos; i++){
-      pollosA.add(new Pollo(loadImage("img/polloA.png"), 0, 418, 610));
-      pollosB.add(new Pollo(loadImage("img/polloB.png"), 515, 930, 610));
+      pollosA.add(new Pollo(loadImage("img/polloA.png"), 0, 418, 590));
+      pollosB.add(new Pollo(loadImage("img/polloB.png"), 515, 930, 590));
     }
   nidoA = new Nido(loadImage("img/nidoA.png"), 0, 300);
   nidoB = new Nido(loadImage("img/nidoB.png"), 515, 810);
@@ -82,55 +82,64 @@ void draw()
       textAlign(CENTER);
       text(mensaje, width/2, 620);
     popMatrix();
-    // una vez calibrado empezamos el juego
-    //estaCalibrado = true;
-    //timer.start();
   }else{
     if (finDelJuego) {
-      textFont(fuente,48);
-      textAlign(CENTER);
-      fill(0);
-      text("FIN DEL JUEGO",width/2,height/2);
-      textFont(fuente,20);
-      text("Jugador A: " + jugadorA.getPuntos() + " puntos.", width/2, height/2 + 40);
-      text("Jugador B: " + jugadorB.getPuntos() + " puntos.", width/2, height/2 + 70);
+      mostrarResumenJuego();
     } 
     else{
+      mostrarTiempo(500, 40);
       
-      for(int i=0; i<totalPollos; i++){
+      mostrarPuntos(jugadorA, 10, 60);
+      mostrarPuntos(jugadorB, 860, 60);    
+      
+      // Jugador A
+      int k = pollosA.size() - 1; // siempre visualizamos el ultimo pollo
+      if (pollosA.size() > 0){
+        //println("# Pollos: " + pollosA.size() + " Velocidad: " + jugadorA.getVelocidad());
+        ((Pollo)pollosA.get(k)).setVelocidad(jugadorA.getVelocidad());
+        ((Pollo)pollosA.get(k)).caer();
+        ((Pollo)pollosA.get(k)).dibujarPollo();  
         
-          // Jugador A
-          //((Pollo)pollosA.get(i)).dibujarPollo();
-          //((Pollo)pollosA.get(i)).caer();
+        // si llego al piso o si fue atrapado
+        if(((Pollo)pollosA.get(k)).llegoAlPiso()){
+          // si es atrapado se deben de sumar los puntos al jugador
+          if (polloAtrapado((Pollo)pollosA.get(k), nidoA)){
+           jugadorA.aumentarPuntos(); 
+          }else{
+            jugadorA.reducirPuntos();
+          }
           
-          // si fue atrapado por un nido
-         /* if(((Pollo)pollosA.get(i)).getPosY() <= ((Pollo)pollosA.get(i)).getLimiteMaxY()){
-            
-            if (polloAtrapado((Pollo)pollosA.get(i), nidoA)){
-             jugadorA.aumentarPuntos(); 
-            }else{
-             jugadorA.reducirPuntos();
-            }
-            pollosA.remove(i);
-          }*/
-          
-          // Jugador B
-         // ((Pollo)pollosB.get(i)).dibujarPollo();
-          //((Pollo)pollosB.get(i)).caer();
-          
-          // si fue atrapado por un nido
-          /*if(((Pollo)pollosB.get(i)).getPosY() <= ((Pollo)pollosB.get(i)).getLimiteMaxY()){
-            
-            if (polloAtrapado((Pollo)pollosB.get(i), nidoB)){
-             jugadorB.aumentarPuntos(); 
-            }else{
-             jugadorB.reducirPuntos();
-            }
-            pollosB.remove(i);
-          }*/
+          pollosA.remove(k);
+          jugadorA.aumentarVelocidad();
+        }
+      }else{
+        finDelJuego = true;
       }
-
-
+            
+      // Jugador B
+      int l = 0; // siempre visualizamos el ultimo pollo
+      if (pollosB.size() > 0){
+        //println("# Pollos: " + pollosB.size() + " Velocidad: " + jugadorB.getVelocidad());
+        ((Pollo)pollosB.get(l)).setVelocidad(jugadorB.getVelocidad());
+        ((Pollo)pollosB.get(l)).caer();
+        ((Pollo)pollosB.get(l)).dibujarPollo();  
+        
+        // si llego al piso o si fue atrapado
+        if(((Pollo)pollosB.get(l)).llegoAlPiso()){
+          // si es atrapado se deben de sumar los puntos al jugador
+          if (polloAtrapado((Pollo)pollosB.get(l), nidoB)){
+           jugadorB.aumentarPuntos(); 
+          }else{
+            jugadorB.reducirPuntos();
+          }
+          
+          pollosB.remove(l);
+          jugadorB.aumentarVelocidad();
+        }
+      }else{
+        finDelJuego = true;
+      }
+      
       asignarPosicionesDetectadas();
       //Dibujamos Nidos segun posiciones detectadas
       nidoA.dibujarNido();
@@ -161,6 +170,7 @@ void mousePressed(){
       mensaje = "Calibrando color para Jugador B: [" + bTrackR + ", " + bTrackG + ", " + bTrackB + "].";
     }else if(key == '3'){
       estaCalibrado = true;
+      timer.start();
     }
   }
 }
@@ -312,10 +322,51 @@ boolean polloAtrapado(Pollo pollo, Nido nido){
   nidoPosMinX = nido.getPosX();
   nidoPosMaxX = nido.getPosX() + nido.getImgNido().width;
   
-  if((polloPosMaxX >= nidoPosMinX) || (polloPosMinX <= nidoPosMaxX)){
+  // se marca como atrapados los pollos que caen dentro del nido,
+  // el valor de 32 que se suma a nido es para que no cuente como valido cuando caen en las flechas
+  // el valor de 30 que se suma al minimo de pollo es para que no cuente si solo es el rabo
+  if((polloPosMaxX >= (nidoPosMinX + 32)) && ((polloPosMinX + 30) <= (nidoPosMaxX - 32))){
+    //println("pollo Atrapado");
     return true;
   }else{
+    //println("pollo Caido");
     return false;
   }
+}
+
+void mostrarPuntos(Jugador jugador, int posX, int posY){
+  pushMatrix();
+    textFont(fuente,30);
+    textAlign(LEFT);
+    text("Puntos: " + jugador.getPuntos() + ".", posX, posY);
+  popMatrix();
+}
+
+void mostrarTiempo(int posX, int posY){
+  pushMatrix();
+    textFont(fuente,30);
+    textAlign(CENTER);
+    text("Tiempo: " + timer.getSegundosRestantes() + ".", posX, posY);
+  popMatrix();
+}
+
+public void mostrarResumenJuego(){
+  textFont(fuente,48);
+  textAlign(CENTER);
+  fill(0);
+  text("FIN DEL JUEGO",width/2,height/2);
+  fill(255);
+  textFont(fuente,50);
+  if (jugadorA.getPuntos() > jugadorB.getPuntos()){
+    text("Ganador Jugador A !" , width/2, height/2 + 60);
+  }else if (jugadorA.getPuntos() < jugadorB.getPuntos()){
+    text("Ganador Jugador B !" , width/2, height/2 + 60);
+  }else{
+    text("Empate !" , width/2, height/2 + 60);
+  }
   
+  textFont(fuente,20);
+  fill(0);
+  text("Jugador A: " + jugadorA.getPuntos() + " puntos.", width/2, height/2 + 100);
+  text("Jugador B: " + jugadorB.getPuntos() + " puntos.", width/2, height/2 + 130);
 }
