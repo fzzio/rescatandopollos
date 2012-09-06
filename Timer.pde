@@ -13,10 +13,8 @@ class Timer {
     savedTime = millis(); 
   }
   
-  // The function isFinished() returns true if totalTime ms have passed. 
-  // The work of the timer is farmed out to this method.
   boolean isFinished() { 
-    // Check how much time has passed
+    // verifica que se haya finalizado el timer
     int passedTime = millis()- savedTime;
     if (passedTime > totalTime) {
       return true;
@@ -25,6 +23,7 @@ class Timer {
     }
   }
   
+  // Se modifico esta clase agregando estos metodos
   int getTiempoTranscurrido(){
     return (millis()- savedTime);
   }

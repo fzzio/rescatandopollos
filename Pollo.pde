@@ -109,6 +109,7 @@ class Pollo{
     }
   }
   
+  // realiza el movimiento de caida del pollo aumentando la coordenada en Y
   public void caer(){
     int y = getPosY();
     y = y + (int)velocidad;

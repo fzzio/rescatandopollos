@@ -39,6 +39,7 @@ class Jugador{
   }
   
   public void aumentarVelocidad(){
+    // esta es la velocidad que maneja cada uno
     this.velocidad = this.velocidad + 1;
   }
 }

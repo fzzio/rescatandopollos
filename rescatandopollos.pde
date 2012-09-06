@@ -1,8 +1,12 @@
+  // Para calibrar color se tiene que:
+  // 1. Tener presionada tecla 1 y dar click con el mouse sobre la region del color que se quiere calibrar para el jugador A
+  // 2. Tener presionada tecla 2 y dar click con el mouse sobre la region del color que se quiere calibrar para el jugador B
+  // Una vez calibrados los 2 colores se procede a presionar el 3 y dar click en cualquier area de la camara para pasar a la pantalla del juego
+  
 // Librerias a usar
 import processing.opengl.*;
-import javax.swing.*;
-//import processing.video.*;
-import codeanticode.gsvideo.*;
+//import processing.video.*; // para windows
+import codeanticode.gsvideo.*; // para linux
 
 // Imagenes a usar
 PImage imgFondo;
@@ -25,8 +29,9 @@ float aTrackR, aTrackG, aTrackB;
 float bTrackR, bTrackG, bTrackB;
 
 String mensaje = "";
-//Capture video;
-GSCapture video;
+
+//Capture video; // para windows
+GSCapture video; // para linux
 
 int posXInicialA, posXInicialB;
 
@@ -35,8 +40,8 @@ void setup()
   size(1024, 700);
   frameRate(30);
   
-  //video = new Capture(this,width,height,15);
-  video = new GSCapture(this, 640, 480);
+  //video = new Capture(this,width,height,15); // para windows
+  video = new GSCapture(this, 640, 480); // para linux
   video.start();
   
   imgFondo = loadImage("img/fondo.png");
@@ -60,7 +65,7 @@ void setup()
 
 void draw()
 {
-  background(imgFondo);  
+  background(imgFondo);
   // Caragamos datos de la camara
   if (video.available()) {
     video.read();
@@ -69,6 +74,7 @@ void draw()
 
   
   if (!estaCalibrado){
+    // Si no esta calibrado (detectado los colores), mostramos la ventana donde se debe seleccionar el color
     pushMatrix();
       //float scalX = (width - video.width) / 100;
       //float scalY = (height - video.height) / 100;
@@ -102,13 +108,14 @@ void draw()
         
         // si llego al piso o si fue atrapado
         if(((Pollo)pollosA.get(k)).llegoAlPiso()){
-          // si es atrapado se deben de sumar los puntos al jugador
+          // si es atrapado se deben de sumar los puntos al jugador, caso contrario le resta puntos
           if (polloAtrapado((Pollo)pollosA.get(k), nidoA)){
            jugadorA.aumentarPuntos(); 
           }else{
             jugadorA.reducirPuntos();
           }
-          
+
+          // se elimina el elemento pollo y se aumenta la velocidad
           pollosA.remove(k);
           jugadorA.aumentarVelocidad();
         }
@@ -126,13 +133,14 @@ void draw()
         
         // si llego al piso o si fue atrapado
         if(((Pollo)pollosB.get(l)).llegoAlPiso()){
-          // si es atrapado se deben de sumar los puntos al jugador
+          // si es atrapado se deben de sumar los puntos al jugador, caso contrario le resta puntos
           if (polloAtrapado((Pollo)pollosB.get(l), nidoB)){
            jugadorB.aumentarPuntos(); 
           }else{
             jugadorB.reducirPuntos();
           }
           
+          // se elimina el elemento pollo y se aumenta la velocidad
           pollosB.remove(l);
           jugadorB.aumentarVelocidad();
         }
@@ -351,6 +359,7 @@ void mostrarTiempo(int posX, int posY){
 }
 
 public void mostrarResumenJuego(){
+  // Mostramos el resumen del juego, quien gano, perdio o empato y cuantos puntos se hizo
   textFont(fuente,48);
   textAlign(CENTER);
   fill(0);
