@@ -100,11 +100,11 @@ void draw()
       for(int i=0; i<totalPollos; i++){
         
           // Jugador A
-          ((Pollo)pollosA.get(i)).dibujarPollo();
-          ((Pollo)pollosA.get(i)).caer();
+          //((Pollo)pollosA.get(i)).dibujarPollo();
+          //((Pollo)pollosA.get(i)).caer();
           
           // si fue atrapado por un nido
-          if(((Pollo)pollosA.get(i)).getPosY() <= ((Pollo)pollosA.get(i)).getLimiteMaxY()){
+         /* if(((Pollo)pollosA.get(i)).getPosY() <= ((Pollo)pollosA.get(i)).getLimiteMaxY()){
             
             if (polloAtrapado((Pollo)pollosA.get(i), nidoA)){
              jugadorA.aumentarPuntos(); 
@@ -112,14 +112,14 @@ void draw()
              jugadorA.reducirPuntos();
             }
             pollosA.remove(i);
-          }
+          }*/
           
           // Jugador B
-          ((Pollo)pollosB.get(i)).dibujarPollo();
-          ((Pollo)pollosB.get(i)).caer();
+         // ((Pollo)pollosB.get(i)).dibujarPollo();
+          //((Pollo)pollosB.get(i)).caer();
           
           // si fue atrapado por un nido
-          if(((Pollo)pollosB.get(i)).getPosY() <= ((Pollo)pollosB.get(i)).getLimiteMaxY()){
+          /*if(((Pollo)pollosB.get(i)).getPosY() <= ((Pollo)pollosB.get(i)).getLimiteMaxY()){
             
             if (polloAtrapado((Pollo)pollosB.get(i), nidoB)){
              jugadorB.aumentarPuntos(); 
@@ -127,7 +127,7 @@ void draw()
              jugadorB.reducirPuntos();
             }
             pollosB.remove(i);
-          }
+          }*/
       }
 
 
@@ -142,9 +142,9 @@ void draw()
     }
   }
 }
-
-void keyPressed(){
+void mousePressed(){
   if(!estaCalibrado && mouseX < video.width && mouseY < video.height){
+    keyPressed();
     if(key == '1'){
       int loc = mouseX + mouseY*video.width;
       trackColorA = video.pixels[loc];
@@ -203,17 +203,17 @@ void asignarPosicionesDetectadas(){
   
   if (worldRecord1>0) {
     int posActualNA = nidoA.getPosX();
-    if((posActualNA - closestX1) > 0){
+    if((posActualNA - closestX1) < 0){
       // mover a la derecha
       if(posActualNA < nidoA.getLimiteMaxX()){
-        posActualNA +=2;
+        posActualNA +=5;
       }else{
         posActualNA = nidoA.getLimiteMaxX();
       }
-    }else if((posActualNA - closestX1) < 0){
+    }else if((posActualNA - closestX1) > 0){
       // mover a la izquierda      
       if(posActualNA > nidoA.getLimiteMinX()){
-        posActualNA +=2;
+        posActualNA -=5;
       }else{
         posActualNA = nidoA.getLimiteMinX();
       }
@@ -226,20 +226,20 @@ void asignarPosicionesDetectadas(){
   if (worldRecord2 > 0) {
     int posActualNB = nidoB.getPosX();
     
-    println("Entra a Nido B");
-    if((posActualNB - closestX2) > 0){
+    
+    if((posActualNB - closestX2) < 0){
       // mover a la derecha
-      println("Mover derecha");
+      
       if(posActualNB < nidoB.getLimiteMaxX()){
         posActualNB += 5;
       }else{
         posActualNB = nidoB.getLimiteMaxX();
       }
-    }else if((posActualNB - closestX2) < 0){
+    }else if((posActualNB - closestX2) > 0){
       // mover a la izquierda
-      println("Mover izquierda");      
+            
       if(posActualNB > nidoB.getLimiteMinX()){
-        posActualNB =posActualNB - 5;
+        posActualNB -=5;
       }else{
         posActualNB = nidoB.getLimiteMinX();
       }
