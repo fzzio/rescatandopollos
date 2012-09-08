@@ -187,7 +187,96 @@ void keyReleased(){
   mensaje = "";
 }
 
+
+//Mueve el nido A y B acorde al tracking de los colores
 void asignarPosicionesDetectadas(){
+  float worldRecord1 = 500, worldRecord2 = 500;
+  int closestX1 = 0, closestX2 = 0;
+  int closestY1 = 0, closestY2 = 0;
+  
+  for(int x = 0; x < video.width; x ++ ) {
+    for(int y = 0; y < video.height; y ++ ) {
+      int loc = x + y*video.width;
+
+      // Obtenemos los datos para el color actual
+      color colorActual = video.pixels[loc];
+      float actR = red(colorActual);
+      float actG = green(colorActual);
+      float actB = blue(colorActual);
+      
+      //Comparamos con los colores detectados en A con distancia Euclidiana
+      float dA = dist(actR, actG, actB, aTrackR, aTrackG, aTrackB);
+      float dB = dist(actR, actG, actB, bTrackR, bTrackG, bTrackB);      
+      
+      if (dA < worldRecord1) {
+        worldRecord1 = dA;
+        closestX1 = x;
+        closestY1 = y;
+      }
+      if (dB < worldRecord2) {
+        worldRecord2 = dB;
+        closestX2 = x;
+        closestY2 = y;
+      }
+    }
+  }
+  //Mueve nidoA
+  if (worldRecord1>0) {
+
+        int posActualNA = nidoA.getPosX();
+        int posXNuevaNA = closestX1;
+        
+        if(posXNuevaNA < posXInicialA){
+          // moverlo izq 
+          posActualNA -=10;
+              if(posActualNA < nidoA.getLimiteMinX()){
+              posActualNA = nidoA.getLimiteMinX();
+          }
+          nidoA.setPosX(posActualNA);
+          
+        }else if(posXNuevaNA > posXInicialA){
+         // moverlo derecha
+           posActualNA +=10;
+           if(posActualNA > nidoA.getLimiteMaxX()){
+             posActualNA = nidoA.getLimiteMaxX();
+           }
+          nidoA.setPosX(posActualNA);
+        }
+        
+        nidoA.dibujarNido();
+        
+        
+        
+        
+  }
+ //Mueve nidoB 
+          if (worldRecord2>0) {
+      
+          int posActualNB = nidoB.getPosX();
+          int posXNuevaNB = closestX2;
+          
+          if(posXNuevaNB < posXInicialB){
+            // moverlo izq 
+            posActualNB -=5;
+           
+            if(posActualNB < nidoB.getLimiteMinX()){
+              posActualNB = nidoB.getLimiteMinX();
+            }
+            nidoB.setPosX(posActualNB);
+          }else if(posXNuevaNB > posXInicialB){
+           // moverlo derecha
+             posActualNB +=5;
+             if(posActualNB > nidoB.getLimiteMaxX()){
+               posActualNB = nidoB.getLimiteMaxX();
+             }
+            nidoB.setPosX(posActualNB);
+          }
+          nidoB.dibujarNido();
+      }
+}
+
+//primera version del movimiento de nidos
+/*void asignarPosicionesDetectadas(){
   float worldRecord1 = 500, worldRecord2 = 500;
   int closestX1 = 0, closestX2 = 0;
   int closestY1 = 0, closestY2 = 0;
@@ -266,7 +355,7 @@ void asignarPosicionesDetectadas(){
     
     
   }
-}
+}*/
 
 
 void dibujarColoresDetectados(){
