@@ -15,6 +15,7 @@ class Nido{
     setLimiteMinX(limiteMinX);
     setLimiteMaxX(limiteMaxX);
     setPosY(height-imgNido.height);
+    setPosX((getLimiteMaxX() - getLimiteMinX()) / 2);
   }
   
   // Getters
