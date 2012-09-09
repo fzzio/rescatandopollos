@@ -19,8 +19,18 @@ Es un juego en el lenguaje de programacion JAVA y como entorno de programacion P
 * Los colores trackeados no deben parecerse a otros en la misma imagen.
 * La luz que reciba la webcam influye pues decolora los pixeles trackeados.
 
+##Aspectos Tecnicos##
+###Requerimientos###
+* Processing IDE 1.5.1 (http://processing.org/)
+* Libreria GSVideo para processing (http://gsvideo.sourceforge.net/)
+Para instalar la libreria basta con descomprimir su contenido dentro de la carpeta modes/java/libraries/ de processing.
 
 
-Autores
+###Instalacion del Juego###
+* Bajar el repositorio y pegarlo en la carpeta sketchbox que genera processing.
+* Reiniciar processing, ir al menu File>Sketchbox y seleccionar rescatandopollos.
+* Darle click al icono de Play para que se ejecute el proyecto
+
+##Autores##
 * Denisse Ochoa (adyteens@gmail.com)
 * Fabricio Orrala (fabricio.orrala@gmail.com)
