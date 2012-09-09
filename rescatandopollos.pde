@@ -30,8 +30,9 @@ float bTrackR, bTrackG, bTrackB;
 
 String mensaje = "";
 
-//Capture video; // para windows
-GSCapture video; // para linux
+//Capture videoC; // para windows
+GSCapture videoC; // para linux
+PImage video; // en esta variable mostramos el video invertido
 
 int posXInicialA, posXInicialB;
 
@@ -41,8 +42,9 @@ void setup()
   frameRate(30);
   
   //video = new Capture(this,width,height,15); // para windows
-  video = new GSCapture(this, 640, 480); // para linux
-  video.start();
+  videoC = new GSCapture(this, 640, 480); // para linux
+  videoC.start();
+  video = createImage(videoC.width, videoC.height, RGB);
   
   imgFondo = loadImage("img/fondo.png");
   jugadorA = new Jugador();
@@ -63,22 +65,29 @@ void setup()
 
 }
 
+void stop()
+{
+  // Stop the GSVideo webcam capture
+  videoC.stop();
+  // Stop the sketch
+  this.stop();
+}
+
 void draw()
 {
   background(imgFondo);
   // Caragamos datos de la camara
-  if (video.available()) {
-    video.read();
+  if (videoC.available()) {
+    videoC.read();
+    video = mirrorImage(videoC);
   }
-  video.loadPixels();
+  
+
 
   
   if (!estaCalibrado){
     // Si no esta calibrado (detectado los colores), mostramos la ventana donde se debe seleccionar el color
     pushMatrix();
-      //float scalX = (width - video.width) / 100;
-      //float scalY = (height - video.height) / 100;
-      //scale(scalX, scalY);
       image(video, 0, 0);
       //image(video, (width - video.width)/2, (height - video.height)/2);
     popMatrix();
@@ -189,7 +198,7 @@ void keyReleased(){
 
 
 //Mueve el nido A y B acorde al tracking de los colores
-void asignarPosicionesDetectadas(){
+public void asignarPosicionesDetectadas(){
   float worldRecord1 = 500, worldRecord2 = 500;
   int closestX1 = 0, closestX2 = 0;
   int closestY1 = 0, closestY2 = 0;
@@ -358,7 +367,7 @@ void asignarPosicionesDetectadas(){
 }*/
 
 
-void dibujarColoresDetectados(){
+public void dibujarColoresDetectados(){
   float worldRecord1 = 500, worldRecord2 = 500;
   int closestX1 = 0, closestX2 = 0;
   int closestY1 = 0, closestY2 = 0;
@@ -409,7 +418,7 @@ void dibujarColoresDetectados(){
   }
 }
 
-boolean polloAtrapado(Pollo pollo, Nido nido){
+public boolean polloAtrapado(Pollo pollo, Nido nido){
   int polloPosMinX, polloPosMaxX;
   int nidoPosMinX, nidoPosMaxX;
   
@@ -431,7 +440,7 @@ boolean polloAtrapado(Pollo pollo, Nido nido){
   }
 }
 
-void mostrarPuntos(Jugador jugador, int posX, int posY){
+public void mostrarPuntos(Jugador jugador, int posX, int posY){
   pushMatrix();
     textFont(fuente,30);
     textAlign(LEFT);
@@ -467,4 +476,45 @@ public void mostrarResumenJuego(){
   fill(0);
   text("Jugador A: " + jugadorA.getPuntos() + " puntos.", width/2, height/2 + 100);
   text("Jugador B: " + jugadorB.getPuntos() + " puntos.", width/2, height/2 + 130);
+}
+
+
+
+PImage mirrorImage(PImage source){
+  // Create new storage for the result RGB image 
+  
+  PImage response = createImage(source.width, source.height, RGB);
+  
+  // Load the pixels data from the source and destination images
+  
+  source.loadPixels();
+  
+  response.loadPixels();  
+    
+  // Walk thru each pixel of the source image
+  
+  for (int x=0; x<source.width; x++) 
+  {
+    for (int y=0; y<source.height; y++) 
+    {
+      // Calculate the inverted X (loc) for the current X
+      
+      int loc = (source.width - x - 1) + y * source.width;
+
+      // Get the color (brightness for B/W images) for 
+      // the inverted-X pixel
+      
+      color c = source.pixels[loc];
+      
+      // Store the inverted-X pixel color information 
+      // on the destination image
+      
+      response.pixels[x + y * source.width] = c;
+    }
+  }
+  
+  // Return the result image with the pixels inverted
+  // over the x axis 
+  
+  return response;
 }
